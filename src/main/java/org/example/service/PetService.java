@@ -4,7 +4,7 @@ import io.restassured.response.Response;
 import org.example.entities.Pet;
 import org.example.service.uritemplate.UriTemplate;
 
-public class PetService extends CommonService {
+public final class PetService extends CommonService {
     private static PetService instance;
 
     public static PetService getInstance() {
@@ -14,23 +14,26 @@ public class PetService extends CommonService {
         return instance;
     }
 
+    private PetService() {
+    }
+
     private static final UriTemplate PET = new UriTemplate("pet");
     private static final UriTemplate PETS_BY_STATUS = new UriTemplate("pet/findByStatus?status=%s");
     private static final UriTemplate PET_BY_ID = new UriTemplate("pet/%s");
 
-    public Response getRequest(Pet.Status status) {
+    public Response getPetsByStatus(Pet.Status status) {
         return super.getRequest(PETS_BY_STATUS.getUri(status.name()));
     }
 
-    public Response getRequest(long id) {
+    public Response getPetById(long id) {
         return super.getRequest(PET_BY_ID.getUri(id));
     }
 
-    public Response postRequest(Object body) {
+    public Response createPet(Object body) {
         return super.postRequest(PET.getUri(), body);
     }
 
-    public void deleteRequest(long id) {
+    public void deletePetById(long id) {
         super.deleteRequest(PET_BY_ID.getUri(id));
     }
 }

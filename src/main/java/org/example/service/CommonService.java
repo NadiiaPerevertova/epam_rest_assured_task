@@ -45,6 +45,11 @@ public class CommonService {
                 .when().post(BASE_URI + uri);
     }
 
+    protected Response putRequest(String uri, Object body) {
+        return requestSpecification.body(body).expect().statusCode(HttpStatus.SC_OK).log().ifError()
+                .when().post(BASE_URI + uri);
+    }
+
     protected void deleteRequest(String uri) {
         requestSpecification.expect().statusCode(HttpStatus.SC_OK).log().ifError()
                 .when().delete(BASE_URI + uri);

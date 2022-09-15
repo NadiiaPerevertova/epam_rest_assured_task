@@ -11,25 +11,33 @@ import java.util.Random;
 public class PetServiceTest {
 
     @Test
-    public void getByStatusTest() {
-        List<Pet> pets = PetServiceSteps.getByStatus(Pet.Status.available);
+    public void checkPetsByStatusTest() {
+        // given, when
+        List<Pet> pets = PetServiceSteps.getPetsByStatus(Pet.Status.available);
+        // then
         boolean allPetsInStatusAvailable = pets.stream().allMatch(pet -> pet.getStatus() == Pet.Status.available);
         Assert.assertNotEquals(pets.size(), 0, "Expected pet list should not be empty");
         Assert.assertTrue(allPetsInStatusAvailable, "Not all pets have expected status: available");
     }
 
     @Test
-    public void getByIdTest() {
-        List<Pet> pets = PetServiceSteps.getByStatus(Pet.Status.available);
+    public void getPetByIdTest() {
+        // given
+        List<Pet> pets = PetServiceSteps.getPetsByStatus(Pet.Status.available);
         Pet expectedPet = pets.get(0);
-        Pet actualPet = PetServiceSteps.getById(expectedPet.getId());
+        // when
+        Pet actualPet = PetServiceSteps.getPetById(expectedPet.getId());
+        // then
         Assert.assertEquals(actualPet, expectedPet, "Expected pet does not match expected one");
     }
 
     @Test
     public void createPetTest() {
+        // given
         Pet expectedPet = createPet();
+        // when
         Pet createdPet = PetServiceSteps.createPet(expectedPet);
+        // then
         Assert.assertEquals(createdPet, expectedPet.setId(createdPet.getId()), "Expected pet does not match created one");
     }
 
@@ -44,12 +52,14 @@ public class PetServiceTest {
     }
 
     @Test
-    public void deleteUsersTest() {
+    public void deleteUserByIdTest() {
+        // given
         Pet expectedPet = createPet();
         Pet createdPet = PetServiceSteps.createPet(expectedPet);
+        // when
         PetServiceSteps.deletePetById(createdPet.getId());
-
-        List<Pet> petsAfterDelete = PetServiceSteps.getByStatus(createdPet.getStatus()).stream()
+        // then
+        List<Pet> petsAfterDelete = PetServiceSteps.getPetsByStatus(createdPet.getStatus()).stream()
                 .filter(pet -> pet.getId() == createdPet.getId() && pet.getName().equals(createdPet.getName()))
                 .toList();
         Assert.assertEquals(petsAfterDelete.size(), 0, "Pet is not deleted:" + createdPet);
